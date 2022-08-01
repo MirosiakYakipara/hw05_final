@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Последние публикации авторов, на которых вы подписаны{% endblock %}
+{% block content %}
+  <div class="container py-5">     
+    <h1>Последние публикации авторов, на которых вы подписаны</h1>
+    {% include 'includes/switcher.html' %}
+    {% load cache %}
+    {% cache 20 follow_index_page page_obj request.user.username %}
+    {% for post in page_obj %}  
+      <article>
+        {% include 'includes/ul.html' %}
+        <a type="button" class="btn btn-outline-primary" href="{% url 'posts:profile' post.author %}">
+          все посты пользователя
+        </a>
+        {% if post.group %}
+          <a type="button" class="btn btn-outline-primary" href="{% url 'posts:group_list' post.group.slug %}">
+            все записи группы
+          </a>
+        {% endif %}
+      </article>
+      {% if not forloop.last %}<hr>{% endif %}
+    {% endfor %}
+    {% endcache %}
+  </div>
+  {% include 'includes/paginator.html' %}
+{% endblock %}

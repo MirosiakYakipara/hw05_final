@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}
+  Страница группы: {{ group }}
+{% endblock %}
+{% block content %}
+  <div class="container py-5">
+    <h1>{{ group.title }}</h1>
+    <p> {{ group.description }} </p>
+    {% for post in page_obj %}
+      <article>
+        {% include 'includes/ul.html' %}
+        <a type="button" class="btn btn-outline-primary" href="{% url 'posts:post_detail' post.pk %}">
+          подробная информация 
+        </a>
+        <a type="button" class="btn btn-outline-primary" href="{% url 'posts:profile' post.author %}">
+          все посты пользователя
+        </a>
+      </article>
+      {% if not forloop.last %}<hr>{% endif %}
+    {% endfor %}
+  </div>
+  {% include 'includes/paginator.html' %} 
+{% endblock %}
