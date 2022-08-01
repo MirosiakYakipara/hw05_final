@@ -383,7 +383,7 @@ class PostViewsTest(TestCase):
         )
         response = self.client_not_author.get(reverse('posts:follow_index'))
         response_2 = self.client_not_author.get(reverse(
-            'posts:profile', args={PostViewsTest.post_1.author.username}
+            'posts:profile', args={PostViewsTest.user.username}
         ))
         self.assertEqual(
             len(response.context['page_obj']),
