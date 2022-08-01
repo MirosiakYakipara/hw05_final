@@ -4,8 +4,6 @@
   <div class="container py-5">     
     <h1>Последние публикации авторов, на которых вы подписаны</h1>
     {% include 'includes/switcher.html' %}
-    {% load cache %}
-    {% cache 20 follow_index_page page_obj request.user.username %}
     {% for post in page_obj %}  
       <article>
         {% include 'includes/ul.html' %}
@@ -20,7 +18,6 @@
       </article>
       {% if not forloop.last %}<hr>{% endif %}
     {% endfor %}
-    {% endcache %}
   </div>
   {% include 'includes/paginator.html' %}
 {% endblock %}

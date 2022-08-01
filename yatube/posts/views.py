@@ -135,7 +135,6 @@ def add_comment(request, post_id):
     return redirect(template_add_comment, post_id=post_id)
 
 
-@cache_page(20, key_prefix='follow_index_page')
 @login_required
 def follow_index(request):
     template_follow_index = 'posts/follow.html'

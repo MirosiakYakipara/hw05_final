@@ -99,7 +99,6 @@ class Follow(CreatedModel):
     class Meta(type):
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
-        unique_together = ['user', 'author']
 
     def __str__(self):
         return self.user.username

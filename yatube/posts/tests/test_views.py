@@ -379,38 +379,28 @@ class PostViewsTest(TestCase):
         Посты автора на которого вы подписаны отображаются на follow_index.
         """
         Follow.objects.create(
-            user=PostViewsTest.user_2, author=PostViewsTest.user
+            user=PostViewsTest.user, author=PostViewsTest.user_2
         )
-        response = self.client_not_author.get(reverse('posts:follow_index'))
-        response_2 = self.client_not_author.get(reverse(
-            'posts:profile', args={PostViewsTest.user.username}
-        ))
-        self.assertEqual(
-            len(response.context['page_obj']),
-            len(response_2.context['page_obj'])
+        post = Post.objects.create(
+            text='Тестируем',
+            author=PostViewsTest.user_2,
         )
-        first_object = response.context['page_obj'][id_post]
-        post_text_0 = first_object.text
-        post_group_0 = first_object.group.title
-        post_author_0 = first_object.author.username
-        context_post_with_group = {
-            post_text_0: 'Тестовый пост 1',
-            post_group_0: 'Тестовая группа',
-            post_author_0: 'auth'
-        }
-        for field, expected in context_post_with_group.items():
-            with self.subTest(field=field):
-                self.assertEqual(field, expected)
+        response = self.authorized_client.get(reverse('posts:follow_index'))
+        posts_new = response.context['page_obj']
+        self.assertIn(post, posts_new)
 
     def test_page_follow_index_for_not_follower(self):
         """
         Посты автора на которого вы не подписаны не отображаются на
         follow_index.
         """
-        response = self.client_not_follow.get(reverse('posts:follow_index'))
-        self.assertEqual(
-            len(response.context['page_obj']), posts_on_another_author
+        post = Post.objects.create(
+            text='Тестируем',
+            author=PostViewsTest.user_2,
         )
+        response = self.client_not_follow.get(reverse('posts:follow_index'))
+        posts_new = response.context['page_obj']
+        self.assertNotIn(post, posts_new)
 
 
 class PaginatorViewsTest(TestCase):
@@ -432,6 +422,7 @@ class PaginatorViewsTest(TestCase):
                 text=f'Тестовый пост № {i}',
                 author=cls.new_user,
                 group=cls.group_1,
+                image=uploaded
             ))
         Post.objects.bulk_create(cls.posts)
         cls.follow = Follow.objects.create(

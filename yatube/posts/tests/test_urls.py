@@ -115,7 +115,7 @@ class PostURLTest(TestCase):
             f'/posts/{ PostURLTest.post.id }/': 'posts/post_detail.html',
             f'/posts/{ PostURLTest.post.id }/edit/': 'posts/create_post.html',
             '/create/': 'posts/create_post.html',
-            '/unexisting_page/': 'core/404.html'
+            '/unexisting_page/': 'core/404.html',
         }
         for url, template in templates_url_names.items():
             with self.subTest(url=url):
