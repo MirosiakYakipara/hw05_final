@@ -247,7 +247,7 @@ class CommentFormTest(TestCase):
         )
         self.assertTrue(
             Comment.objects.filter(
-                text='Тестовый комментарий',
+                text=form_data['text']
             ).exists()
         )
 

@@ -310,9 +310,38 @@ class PostViewsTest(TestCase):
             len(response.context['page_obj']), posts_on_another_group
         )
 
-    def test_page_post_detail_show_correct_comment(self):
-        """Комментарий отображается на странице поста."""
+    def test_page_post_detail_show_correct_comment_for_authorized(self):
+        """
+        Комментарий отображается на странице поста для
+        авторизованного пользователя.
+        """
         response = self.authorized_client.get(
+            reverse('posts:post_detail', args={PostViewsTest.post_1.id})
+        )
+        first_object = response.context.get('posts')
+        post_text_0 = first_object.text
+        post_id_0 = first_object.id
+        post_image_0 = first_object.image
+        comments = response.context.get('comments')
+        for comment in comments:
+            comment.text
+        post_comment_0 = comment.text
+        context_post = {
+            post_text_0: 'Тестовый пост 1',
+            post_image_0: 'posts/small.gif',
+            post_id_0: 0,
+            post_comment_0: 'Тестовый комментарий'
+        }
+        for field, expected in context_post.items():
+            with self.subTest(field=field):
+                self.assertEqual(field, expected)
+
+    def test_page_post_detail_show_correct_comment_for_anonymous(self):
+        """
+        Комментарий отображается на странице поста для
+        не авторизованного пользователя.
+        """
+        response = self.guest_client.get(
             reverse('posts:post_detail', args={PostViewsTest.post_1.id})
         )
         first_object = response.context.get('posts')
